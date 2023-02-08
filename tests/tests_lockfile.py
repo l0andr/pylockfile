@@ -36,3 +36,8 @@ def test_lockfile_lock_named():
     assert os.path.exists('testlock.lock')
     lock.release()
     assert not os.path.exists('testlock.lock')
+
+def test_lockfile_lockname():
+    lock = lockfile.LockFile(lockname="testlock",lockfiledir='.')
+    lock.lock()
+    assert lock.lockname == 'testlock'

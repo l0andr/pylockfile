@@ -24,10 +24,9 @@ class LockFile:
         :param lockname: name of lockfile, if not specified will be generated random name
         :param lockfiledir: directory where lockfile should be placed, must exist, default: current directory
         """
-        self.lockname = lockname
-        if not self.lockname:
-            self.lockname = self._generate_default_lockname()
-        self.lockname = self._add_lock_extension(self.lockname)
+        self.__lockname = lockname
+        if not self.__lockname:
+            self.__lockname = self._generate_default_lockname()
         self.lockfiledir = lockfiledir
         if not self.lockfiledir:
             self.lockfiledir = ""
@@ -49,12 +48,15 @@ class LockFile:
         return lockname + '.lock' if not lockname.endswith('.lock') else lockname
 
     def __get_lock_file_path(self):
-        return os.path.join(self.lockfiledir, self.lockname)
+        self.__lockfilename = self._add_lock_extension(self.__lockname)
+        return os.path.join(self.lockfiledir, self.__lockfilename)
 
     def __create_lock_file(self):
         fid = open(self.__get_lock_file_path(), 'w')
         fid.close()
-
+    @property
+    def lockname(self):
+        return self.__lockname
     def lock(self):
         """
         Set lock, raise exception (AlreadyLocked) in case, if it set already
