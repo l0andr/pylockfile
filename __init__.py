@@ -10,6 +10,7 @@ __license__ = "MIT"
 __version__ = "0.0.1"
 __email__ = "andreyloginovmob@gmail.com"
 __status__ = "Development"
+__all__ = ['lockfile','pidfile','lock_exceptions']
 import sys
 if sys.version_info[:2] < (3, 6):
     raise RuntimeError("pylockfile package requres Python 3.6+")

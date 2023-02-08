@@ -10,13 +10,13 @@ import os
 import uuid
 from typing import Optional
 
-from lock_exceptions import AlreadyLocked, IsNotLocked
-
+import lock_exceptions
 
 class LockFile:
     """
-        Base lockfile class 
+        Base lockfile class
     """
+
     default_file_name_length: int = 8
 
     def __init__(self, lockname: Optional[str] = None, lockfiledir: Optional[str] = None):
@@ -25,6 +25,7 @@ class LockFile:
         :param lockfiledir: directory where lockfile should be placed, must exist, default: current directory
         """
         self.__lockname = lockname
+        self.__lockfilename = None
         if not self.__lockname:
             self.__lockname = self._generate_default_lockname()
         self.lockfiledir = lockfiledir
@@ -52,10 +53,15 @@ class LockFile:
         return os.path.join(self.lockfiledir, self.__lockfilename)
 
     def __create_lock_file(self):
-        fid = open(self.__get_lock_file_path(), 'w')
-        fid.close()
+        with open(self.__get_lock_file_path(), 'w',encoding='utf8'):
+            pass
     @property
-    def lockname(self):
+    def lockname(self)->str:
+        """
+        return lockname
+        :return:
+        """
+
         return self.__lockname
     def lock(self):
         """
@@ -63,7 +69,7 @@ class LockFile:
         :return:
         """
         if os.path.exists(self.__get_lock_file_path()):
-            raise AlreadyLocked()
+            raise lock_exceptions.AlreadyLocked()
         self.__create_lock_file()
 
     def release(self):
@@ -72,7 +78,7 @@ class LockFile:
         :return:
         """
         if not os.path.exists(self.__get_lock_file_path()):
-            raise IsNotLocked()
+            raise lock_exceptions.IsNotLocked()
         os.remove(self.__get_lock_file_path())
 
     def is_locked(self) -> bool:
