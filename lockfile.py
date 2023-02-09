@@ -56,13 +56,13 @@ class LockFile:
         with open(self.__get_lock_file_path(), 'w',encoding='utf8'):
             pass
     @property
-    def lockname(self)->str:
+    def lockname(self)->Optional[str]:
         """
         return lockname
         :return:
         """
-
         return self.__lockname
+
     def lock(self):
         """
         Set lock, raise exception (AlreadyLocked) in case, if it set already
@@ -87,6 +87,13 @@ class LockFile:
         :return: bool
         """
         return os.path.exists(self.__get_lock_file_path())
+
+    def __enter__(self):
+        self.lock()
+        return self.__lockname
+
+    def __exit__(self, type, value, traceback):
+        self.release()
 
     def __del__(self):
         if self.is_locked():

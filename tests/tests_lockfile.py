@@ -41,3 +41,10 @@ def test_lockfile_lockname():
     lock = lockfile.LockFile(lockname="testlock",lockfiledir='.')
     lock.lock()
     assert lock.lockname == 'testlock'
+
+def test_lockfile_as_ContextManager():
+    lock = lockfile.LockFile(lockname="testlock", lockfiledir='.')
+    with lock as lockname:
+        assert lockname == 'testlock'
+        assert os.path.exists('testlock.lock')
+    assert not os.path.exists('testlock.lock')
