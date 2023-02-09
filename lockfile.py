@@ -8,8 +8,8 @@ Copyright 2023, Andrey Loginov
 
 import os
 import uuid
-from typing import Optional
-
+from typing import Optional, Callable
+from functools import wraps
 import lock_exceptions
 
 class LockFile:
@@ -19,7 +19,8 @@ class LockFile:
 
     default_file_name_length: int = 8
 
-    def __init__(self, lockname: Optional[str] = None, lockfiledir: Optional[str] = None):
+    def __init__(self, lockname: Optional[str] = None, lockfiledir: Optional[
+        str] = None):
         """
         :param lockname: name of lockfile, if not specified will be generated random name
         :param lockfiledir: directory where lockfile should be placed, must exist, default: current directory
@@ -87,7 +88,14 @@ class LockFile:
         :return: bool
         """
         return os.path.exists(self.__get_lock_file_path())
-
+    def __call__(self,wrappedfun:Callable):
+        @wraps(wrappedfun)
+        def wrapper(*args,**kwargs):
+            self.lock()
+            ans = wrappedfun(*args,**kwargs)
+            self.release()
+            return ans
+        return wrapper
     def __enter__(self):
         self.lock()
         return self.__lockname

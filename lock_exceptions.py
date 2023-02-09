@@ -16,3 +16,6 @@ class AlreadyLocked(PylockException):
 
 class IsNotLocked(PylockException):
     pass
+
+class WrapFuncNotDefined(PylockException):
+    pass

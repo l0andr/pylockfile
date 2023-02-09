@@ -48,3 +48,14 @@ def test_lockfile_as_ContextManager():
         assert lockname == 'testlock'
         assert os.path.exists('testlock.lock')
     assert not os.path.exists('testlock.lock')
+
+def test_lockfile_as_decorator():
+    @lockfile.LockFile(lockname='testdecorator')
+    def some_func(A:int,B:int):
+        assert os.path.exists('testdecorator.lock')
+        return A*B
+    A = 5
+    B = 7
+    assert some_func(A,B) == A*B
+    assert not os.path.exists('testdecorator.lock')
+
