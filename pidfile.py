@@ -8,12 +8,10 @@ Pid file it's like 'lock' for current process
 Copyright 2023, Andrey Loginov
 """
 
-__author__ = "Andrey Loginov"
-__email__ = "andreyloginovmob@gmail.com"
-
 import os
 
 import lockfile
+
 
 class PidFile(lockfile.LockFile):
     """
@@ -26,7 +24,7 @@ class PidFile(lockfile.LockFile):
         return lockname
 
     @property
-    def get_pid(self)->str:
+    def get_pid(self) -> str:
         """
 
         Just return Process Identificator
@@ -40,3 +38,14 @@ class PidFile(lockfile.LockFile):
         pid_name = f"{str(os.getpid())}.pid"
         return lockname + pid_name if not lockname.endswith(pid_name) else lockname
 
+
+class SinglePidFile(PidFile):
+    """
+    Singleton version, have the same behaviour as PidFil, but can be created more than one object
+    """
+    instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, 'instance') or cls.instance is None:
+            cls.instance = super(SinglePidFile, cls).__new__(cls)
+        return cls.instance

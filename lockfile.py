@@ -18,18 +18,21 @@ class LockFile:
     """
 
     default_file_name_length: int = 8
-
+    __lockname = None
+    lockfiledir = None #TODO make private!
     def __init__(self, lockname: Optional[str] = None, lockfiledir: Optional[
         str] = None):
         """
         :param lockname: name of lockfile, if not specified will be generated random name
         :param lockfiledir: directory where lockfile should be placed, must exist, default: current directory
         """
-        self.__lockname = lockname
+        if self.lockname is None:
+            self.__lockname = lockname
         self.__lockfilename = None
         if not self.__lockname:
             self.__lockname = self._generate_default_lockname()
-        self.lockfiledir = lockfiledir
+        if self.lockname is None:
+            self.lockfiledir = lockfiledir
         if not self.lockfiledir:
             self.lockfiledir = ""
         if self.lockfiledir and not os.path.isdir(self.lockfiledir):
