@@ -16,7 +16,7 @@ Last but not least, the signal_dispatcher module contains the <b><i>pylockfile.s
 
 ### Example:
 
-```
+```python
     import time
     import os
     from lockfile import LockFile
