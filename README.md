@@ -9,8 +9,8 @@ Last but not least, the signal_dispatcher module contains the <b><i>pylockfile.s
 
 ### Features:
 
-* Can <b>LockFile</b> and <b>PidFile</b> can be used as Context Managers 
-* Can <b>LockFile</b> and <b>PidFile</b> can be used as Decorators
+* <b>LockFile</b> and <b>PidFile</b> can be used as Context Managers 
+* <b>LockFile</b> and <b>PidFile</b> can be used as Decorators
 * Available class <b>SignalPidFile</b>, it is singleton version of <b>PidFile</b>
 * Available .lock \\ .pid file deleation by handling of SIGTERM \ SIGINT signals
 
