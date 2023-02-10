@@ -27,14 +27,14 @@ Last but not least, the signal_dispatcher module contains the <b><i>pylockfile.s
         spf = SinglePidFile()
         while spf.is_locked():
             try:
-                with LockFile(lockname="critical_code",delete_lock_on_sigint=True) as lockname:
+                with LockFile(lockname="critical_code") as lockname:
                     print(f"I, process with PID={os.getpid()}, have caught this very critical resource")
                     # work with some critical resource
                     time.sleep(5)
             except AlreadyLocked:
                 print(f"But I, process with PID={os.getpid()},can not caught this very critical resource")
 
-            @LockFile(lockname="critical_function",delete_lock_on_sigint=True)
+            @LockFile(lockname="critical_function")
             def some_critical_function():
                 time.sleep(3)
                 print(f"Process with PID={os.getpid()},in some critical function")
