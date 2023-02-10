@@ -19,7 +19,7 @@ class LockFile:
 
     default_file_name_length: int = 8
     __lockname = None
-    lockfiledir = None #TODO make private!
+    __lockfiledir = None
     def __init__(self, lockname: Optional[str] = None, lockfiledir: Optional[
         str] = None):
         """
@@ -32,10 +32,10 @@ class LockFile:
         if not self.__lockname:
             self.__lockname = self._generate_default_lockname()
         if self.lockname is None:
-            self.lockfiledir = lockfiledir
-        if not self.lockfiledir:
-            self.lockfiledir = ""
-        if self.lockfiledir and not os.path.isdir(self.lockfiledir):
+            self.__lockfiledir = lockfiledir
+        if not self.__lockfiledir:
+            self.__lockfiledir = ""
+        if self.__lockfiledir and not os.path.isdir(self.__lockfiledir):
             raise RuntimeError(f"{self.__class__.__name__}: Specified directory {lockfiledir} does not exists")
 
     @classmethod
@@ -54,7 +54,7 @@ class LockFile:
 
     def __get_lock_file_path(self):
         self.__lockfilename = self._add_lock_extension(self.__lockname)
-        return os.path.join(self.lockfiledir, self.__lockfilename)
+        return os.path.join(self.__lockfiledir, self.__lockfilename)
 
     def __create_lock_file(self):
         with open(self.__get_lock_file_path(), 'w',encoding='utf8'):

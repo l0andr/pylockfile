@@ -59,5 +59,5 @@ def test_lockfile_as_decorator():
         return a_v*b_v
     a_v = 5
     b_v = 7
-    assert some_func(a_v,a_v) == a_v*b_v
+    assert some_func(a_v,b_v) == a_v*b_v
     assert not os.path.exists('testdecorator.lock')
