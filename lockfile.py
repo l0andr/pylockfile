@@ -120,7 +120,8 @@ class LockFile:
         return self.__lockname
 
     def __exit__(self, type, value, traceback):
-        self.release()
+        if self.is_locked():
+            self.release()
 
     def __del__(self):
         if self.is_locked():
