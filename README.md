@@ -19,9 +19,9 @@ Last but not least, the signal_dispatcher module contains the <b><i>pylockfile.s
 ```python
     import time
     import os
-    from lockfile import LockFile
-    from pidfile import SinglePidFile
-    from lock_exceptions import AlreadyLocked
+    from pylockfile.lockfile import LockFile
+    from pylockfile.pidfile import SinglePidFile
+    from pylockfile.lock_exceptions import AlreadyLocked
 
     with SinglePidFile(delete_lock_on_sigint=True):
         spf = SinglePidFile()
