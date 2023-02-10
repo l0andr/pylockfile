@@ -1,10 +1,15 @@
 # pylockfile
-### Implementation of concepts of .pid and .lock files.
+### Python implementation of Lock (.lock) and PID (.pid) file concepts
 
-<b>lockfile</b> is just a file that is created in the file system. If there is an attempt to create it again, an exception will be raised. It can be used to 
-prevent simultaneous access to one resource from many processes.
+A <b>Lock file</b> is a file used by various operating systems and programs to lock a resource, such as a file or a
+device. <b>Lock file</b> it is just a file, but if it exists it's signal to another processes that some resource
+already in use.
+class <i>pylockfile.lockfile</i>: create lock file, delete them and raise exceptions in attempts to lock it again.
+This class can be used as Context Manager or Decorator for some critical code sections or functions
 
-<b>pidfile</b> is similar to a lockfile, but it is typically used for one process. It contains the process identification number and logic for handling SIGINT and 
-SIGTERM signals.
+A <b>Pid file</b> is a similar concepts, this is file that created when some process started and deleted when 
+this process finished. Usually PID file contains Process Indeficator number in his name.  
+class <i>pylockfile.pidfile</i>: can create pid file on start of process and delete on the end, also can correct handle
+SIGTERM and SIGINT signals, can work as Context Manager.
 
 #### pylockfile contain implementation of both concepts 
