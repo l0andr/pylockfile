@@ -1,6 +1,9 @@
+#pylint: disable=missing-module-docstring
+#pylint: disable-next=missing-function-docstring
+
 import os.path
 
-import pytest
+import pytest # pylint: disable=unused-import
 import pidfile
 from lock_exceptions import AlreadyLocked,IsNotLocked
 
@@ -24,15 +27,14 @@ def test_pidfile_release():
         release_failed = True
     assert release_failed
 
-def test_pidfile_as_ContextManager():
+def test_pidfile_as_context_manager():
     with pidfile.PidFile('test_') as lockname:
         assert os.path.exists(f'{lockname}{os.getpid()}.pid')
-        p = pidfile.PidFile('test_')
+        pid_obj = pidfile.PidFile('test_')
         double_lock_failed = False
         try:
-            p.lock()
+            pid_obj.lock()
         except AlreadyLocked:
             double_lock_failed = True
         assert double_lock_failed
     assert not os.path.exists(f'test_{os.getpid()}.pid')
-

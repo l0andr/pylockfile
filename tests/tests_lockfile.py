@@ -1,6 +1,9 @@
+#pylint: disable=missing-module-docstring
+#pylint: disable-next=missing-function-docstring
+
 import os.path
 
-import pytest
+import pytest # pylint: disable=unused-import
 import lockfile
 from lock_exceptions import AlreadyLocked,IsNotLocked
 
@@ -42,7 +45,7 @@ def test_lockfile_lockname():
     lock.lock()
     assert lock.lockname == 'testlock'
 
-def test_lockfile_as_ContextManager():
+def test_lockfile_as_context_manager():
     lock = lockfile.LockFile(lockname="testlock", lockfiledir='.')
     with lock as lockname:
         assert lockname == 'testlock'
@@ -51,11 +54,10 @@ def test_lockfile_as_ContextManager():
 
 def test_lockfile_as_decorator():
     @lockfile.LockFile(lockname='testdecorator')
-    def some_func(A:int,B:int):
+    def some_func(a_v:int,b_v:int):
         assert os.path.exists('testdecorator.lock')
-        return A*B
-    A = 5
-    B = 7
-    assert some_func(A,B) == A*B
+        return a_v*b_v
+    a_v = 5
+    b_v = 7
+    assert some_func(a_v,a_v) == a_v*b_v
     assert not os.path.exists('testdecorator.lock')
-
