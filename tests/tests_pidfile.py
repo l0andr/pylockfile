@@ -17,6 +17,7 @@ def test_pidfile_lock():
     except AlreadyLocked:
         double_lock_failed = True
     assert double_lock_failed
+    lock.release()
 
 def test_pidfile_release():
     lock = pidfile.PidFile()

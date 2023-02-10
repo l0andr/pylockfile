@@ -7,11 +7,12 @@ Copyright 2023, Andrey Loginov
 """
 
 import os
+import signal
 import uuid
 from typing import Optional, Callable
 from functools import wraps
 import lock_exceptions
-
+import signals_dispatcher
 class LockFile:
     """
         Base lockfile class
@@ -20,11 +21,16 @@ class LockFile:
     default_file_name_length: int = 8
     __lockname = None
     __lockfiledir = None
+    __sig_term = None
+    __sig_int = None
+
     def __init__(self, lockname: Optional[str] = None, lockfiledir: Optional[
-        str] = None):
+        str] = None,delete_lock_on_sigterm = False, delete_lock_on_sigint = False):
         """
         :param lockname: name of lockfile, if not specified will be generated random name
         :param lockfiledir: directory where lockfile should be placed, must exist, default: current directory
+        :param delete_lock_on_sigterm; If True lock will be release on SIGTERM signal [default True]
+        :param delete_lock_on_sigint; If True lock will be release on SIGINT signal [default True]
         """
         if self.lockname is None:
             self.__lockname = lockname
@@ -37,6 +43,16 @@ class LockFile:
             self.__lockfiledir = ""
         if self.__lockfiledir and not os.path.isdir(self.__lockfiledir):
             raise RuntimeError(f"{self.__class__.__name__}: Specified directory {lockfiledir} does not exists")
+        if delete_lock_on_sigterm or delete_lock_on_sigint:
+            def sigterm_handler(sig, frame): #pylint: disable=unused-argument
+                if self.is_locked():
+                    self.release()
+            if delete_lock_on_sigterm:
+                self.__sig_term = signals_dispatcher.SignalDispatcher(signal.SIGTERM)
+                self.__sig_term.add(sigterm_handler)
+            if delete_lock_on_sigint:
+                self.__sig_int = signals_dispatcher.SignalDispatcher(signal.SIGINT)
+                self.__sig_int.add(sigterm_handler)
 
     @classmethod
     def _generate_default_lockname(cls) -> str:

@@ -68,7 +68,9 @@ class SignalDispatcher:
         """
         if self.__signal_handler is not None:
             self.__signal_handler = None
-            signal.signal(self.__sig, self.__previous_handler)
+            if self.__previous_handler == signal.SIG_IGN or self.__previous_handler == signal.SIG_DFL or \
+                    callable(self.__previous_handler):
+                signal.signal(self.__sig, self.__previous_handler)
             self.__previous_handler = None
         else:
             raise RuntimeError(f"New signal handler was not set for signal {self.__sig}")
